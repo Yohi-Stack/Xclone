@@ -100,11 +100,11 @@ if (process.env.NODE_ENV === "production") {
 
   app.use(express.static(distPath));
 
-  // app.get("*", (req, res) => {
-  //   const indexPath = path.join(distPath, "index.html");
-  //   console.log("SPA fallback will serve:", indexPath);
-  //   res.sendFile(indexPath);
-  // });
+  app.get("*", (req, res) => {
+    const indexPath = path.join(distPath, "index.html");
+    console.log("SPA fallback will serve:", indexPath);
+    res.sendFile(indexPath);
+  });
 }
 
 
