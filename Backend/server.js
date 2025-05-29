@@ -78,31 +78,18 @@ try {
 }
 
 
-// const __dirname = path.resolve();
+// Get __dirname in ES module
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Serve static files in production
-// if (process.env.NODE_ENV === "production") {
-//   app.use(express.static(path.join(__dirname, "../frontend/dist")));
-
-//   // Fallback for Single Page Application routes
-//   app.get("*", (req, res) => {
-//     res.sendFile(path.resolve(__dirname, "frontend","dist","index.html"));
-//   });
-// }
-
+// Serve static frontend in production
 if (process.env.NODE_ENV === "production") {
   const distPath = path.join(__dirname, "../frontend/dist");
-
-  // console.log("🛠️ Serving static files from:", distPath);
-  // console.log("🛠️ SPA fallback will serve:", path.join(distPath, "index.html"));
-
   app.use(express.static(distPath));
 
-  app.get("*", (req, res) => {
+  // Safe SPA fallback for non-API routes
+  app.get(/^(?!\/api).*/, (req, res) => {
     const indexPath = path.join(distPath, "index.html");
-    console.log("SPA fallback will serve:", indexPath);
     res.sendFile(indexPath);
   });
 }
@@ -120,3 +107,5 @@ app.listen(PORT,()=>{
     console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
     connectDb();
 })
+
+
